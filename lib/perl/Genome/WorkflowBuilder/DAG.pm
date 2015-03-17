@@ -79,10 +79,7 @@ sub _execute_with_ptero {
 
     my $builder = $self->get_ptero_builder;
 
-    my $workflow = $builder->submit(
-        inputs => \%inputs,
-        parallel_by => $self->parallel_by,
-    );
+    my $workflow = $builder->submit( inputs => \%inputs );
     $workflow->wait;
 
     # XXX Die if the workflow has failed
