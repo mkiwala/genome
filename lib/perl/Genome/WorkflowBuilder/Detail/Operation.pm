@@ -11,6 +11,7 @@ use XML::LibXML qw();
 use Carp qw(confess);
 use Data::Dumper qw();
 use List::MoreUtils qw(firstval);
+use Params::Validate qw(:types);
 
 
 class Genome::WorkflowBuilder::Detail::Operation {
