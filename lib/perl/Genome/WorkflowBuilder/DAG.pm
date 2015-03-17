@@ -336,9 +336,9 @@ sub _validate_operation_names_are_unique {
     my $operation_names = new Set::Scalar;
     for my $op (@{$self->operations}) {
         if ($operation_names->contains($op->name)) {
-            die $self->error_message(sprintf(
+            die $self->error_message(
                     "Workflow DAG '%s' contains multiple operations named '%s'",
-                    $self->name, $op->name));
+                    $self->name, $op->name);
         }
         $operation_names->insert($op->name);
     }
@@ -365,10 +365,10 @@ sub _validate_operation_ownership {
 
     if (defined($op)) {
         unless ($operations_hash->{$op}) {
-            die $self->error_message(sprintf(
-                    "Unowned operation (%s) linked in DAG (%s)",
+            die $self->error_message(
+                "Unowned operation (%s) linked in DAG (%s)",
                     $op->name, $self->name,
-            ));
+            );
         }
     }
 }
@@ -386,10 +386,9 @@ sub _validate_mandatory_inputs {
     }
 
     unless ($mandatory_inputs->is_empty) {
-        die $self->error_message(sprintf(
-            "%d mandatory input(s) missing in DAG: %s",
+        die $self->error_message( "%d mandatory input(s) missing in DAG: %s",
             $mandatory_inputs->size, $mandatory_inputs
-        ));
+        );
     }
 }
 
@@ -425,11 +424,11 @@ sub _validate_non_conflicting_inputs {
         my $ei = $self->_encode_input($link->destination_operation_name,
             $link->destination_property);
         if ($encoded_inputs->contains($ei)) {
-            die $self->error_message(sprintf(
-"Conflicting input to '%s' on (%s) found.  One link is from '%s' on (%s)",
+            die $self->error_message(
+                "Conflicting input to '%s' on (%s) found.  "
+                ."One link is from '%s' on (%s)",
                 $link->destination_property, $link->destination_operation_name,
-                $link->source_property, $link->source_operation_name
-            ));
+                $link->source_property, $link->source_operation_name);
         }
         $encoded_inputs->insert($ei);
     }
