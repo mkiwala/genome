@@ -57,28 +57,15 @@ sub add_link {
     return $link;
 }
 
-sub new_execute {
+sub execute {
     my $self = shift;
 
-    my %p = Params::Validate::validate(@_, {
-        backend => {
-            type => SCALAR,
-            optional => 1,
-        },
-        inputs => {
-            type => HASHREF,
-        },
-    });
+    my $backend = $ENV{GENOME_WORKFLOW_BUILDER_BACKEND} || 'workflow';
+    if ($backend eq 'ptero') {
+        return $self->_execute_with_ptero(@_);
 
-    unless (exists $p{backend}) {
-        $p{backend} = $ENV{GENOME_WORKFLOW_BUILDER_DEFAULT_BACKEND};
-    }
-
-    if ($p{backend} eq 'ptero') {
-        return $self->_execute_with_ptero($p{inputs});
-
-    } elsif ($p{backend} eq 'workflow') {
-        return $self->execute(%{$p{inputs}});
+    } elsif ($backend eq 'workflow') {
+        return $self->SUPER::execute(@_);
 
     } else {
         Carp::confess sprintf("Unknown backend specified: %s", $p{backend});
@@ -87,7 +74,8 @@ sub new_execute {
 
 sub _execute_with_ptero {
     my $self = shift;
-    my %inputs = (%{$_[0]}, %{$self->constant_values});
+    my %old_inputs = @_;
+    my %inputs = (%old_inputs, %{$self->constant_values});
 
     my $builder = $self->get_ptero_builder;
 
