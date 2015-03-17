@@ -82,7 +82,12 @@ sub _execute_with_ptero {
     my $workflow = $builder->submit( inputs => \%inputs );
     $workflow->wait;
 
-    # XXX Die if the workflow has failed
+    unless ($workflow->status eq 'success') {
+        my $error_message = $self->error_message( "Workflow '%s' exited with status '%s'",
+            $self->name, $workflow->status);
+        $self->debug_message("Workflow inputs %inputs");
+    }
+
     return $workflow->outputs;
 }
 
