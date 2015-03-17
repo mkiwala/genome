@@ -68,7 +68,7 @@ sub execute {
         return $self->SUPER::execute(@_);
 
     } else {
-        Carp::confess sprintf("Unknown backend specified: %s", $p{backend});
+        die $self->error_message("Unknown backend specified: %s", $backend);
     }
 }
 
